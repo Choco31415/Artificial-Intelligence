@@ -10,7 +10,7 @@ import java.util.BitSet;
 public class Num23 {
 	
 	/**
-	 * A genetic algorithm for find the number "goal"
+	 * A genetic algorithm for finding an expression equaling "goal"
 	 * Most ideas based on: http://www.ai-junkie.com/ga/intro/gat1.html
 	 */
 	
@@ -59,11 +59,11 @@ public class Num23 {
 
 	public static void main(String[] args) {
 		init();
-		BitSet[] equations = new BitSet[N];
+		BitSet[] expressions = new BitSet[N];
 		Float[] fitnessScores = new Float[N];
 		RouletteWheel rw;
 		
-		BitSet[] newEquations = new BitSet[N];
+		BitSet[] newexpressions = new BitSet[N];
 		BitSet[] incoming;
 		
 		BitSet tempBit1;
@@ -84,7 +84,7 @@ public class Num23 {
 			
 		//We generate random bitsets.
 		for (int i = 0; i < N; i++) {
-			equations[i] = randomBitSet(binarySize);
+			expressions[i] = randomBitSet(binarySize);
 		}
 			
 		temp = new BitSet(36);
@@ -93,24 +93,24 @@ public class Num23 {
 			temp.set(i, true);
 			temp.set(i+2, true);
 		}
-		equations[0] = temp;
+		expressions[0] = temp;
 		
 		for (int gen = 0; gen < searchDepth; gen++) {
 			localFitDist = (float) hugeNumber;
 			//We test each bitset's fitness.
 			for (int i = 0; i < N; i++) {
-				fitnessScores[i] = fitnessTest(equations[i]);
+				fitnessScores[i] = fitnessTest(expressions[i]);
 			}
 			
 			//We record the current generation of binaries.
 			if (writerOn) {
 				writer.println("Generation: " + gen);
 				for (int i = 0; i < N; i++) {
-					writer.println(toMathEquation(equations[i]));
+					writer.println(toMathexpression(expressions[i]));
 				}
 			}
 			
-			rw = new RouletteWheel(equations, fitnessScores);
+			rw = new RouletteWheel(expressions, fitnessScores);
 			
 			if (suppressLowest > 0) {
 				rw.removeLowest(suppressLowest);
@@ -125,33 +125,33 @@ public class Num23 {
 			if (writerOn) {
 				writer.println("Rw: " + rw);
 				writer.println("Local maximum value achieved: " + goal + " +- "+ localFitDist + "\n");
-				writer.println("It's equation was: " + toMathEquation(localFitBit) + "\n");
+				writer.println("It's expression was: " + toMathexpression(localFitBit) + "\n");
 			}
 			
 			for (int i = 0; i < N; i += 2) {
 				tempBit1 = mutate(clone((BitSet)rw.pickRandomItem()));
 				tempBit2 = mutate(clone((BitSet)rw.pickRandomItem()));
 				incoming = crossOver(tempBit1, tempBit2);
-				newEquations[i] = incoming[0];
-				newEquations[i+1] = incoming[1];
+				newexpressions[i] = incoming[0];
+				newexpressions[i+1] = incoming[1];
 			}
 			
-			equations = newEquations;
+			expressions = newexpressions;
 		}
 		
 		if (writerOn) {
 			writer.println("Generation: " + (searchDepth+1));
 			for (int i = 0; i < N; i++) {
-				writer.println(toMathEquation(equations[i]));
+				writer.println(toMathexpression(expressions[i]));
 			}
 			
 			writer.println("Maximum value achieved: " + goal + " +- "+ MaximumFitDist);
-			writer.println("It's equation was: " + toMathEquation(maxFitBit));
+			writer.println("It's expression was: " + toMathexpression(maxFitBit));
 			writer.close();
 		}
 		
 		System.out.println("Maximum value achieved: " + goal + " +- "+ MaximumFitDist);
-		System.out.println("It's equation was: " + toMathEquation(maxFitBit));
+		System.out.println("It's expression was: " + toMathexpression(maxFitBit));
 	}
 
 	public static BitSet randomBitSet(int n) {
@@ -289,9 +289,9 @@ public class Num23 {
 		return output;
 	}
 	
-	public static String toMathEquation(BitSet bits) {
+	public static String toMathexpression(BitSet bits) {
 		//This method is for convenience/testing purposes only.
-		//This method turns a bitset into a mathematical equation.
+		//This method turns a bitset into a mathematical expression.
 		BitSet[] chars = breakIntoChunks(bits);
 		
 		String output = "";
