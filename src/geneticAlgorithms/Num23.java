@@ -9,6 +9,11 @@ import java.util.BitSet;
 
 public class Num23 {
 	
+	/**
+	 * A genetic algorithm for find the number "goal"
+	 * Most ideas based on: http://www.ai-junkie.com/ga/intro/gat1.html
+	 */
+	
 	final static int N = 30; //How many members are there per generation?
 	final static int charNum = 9; //How many characters per binary?
 	final static int charSize = 4; //How big is each character?
